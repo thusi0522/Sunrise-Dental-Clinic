@@ -58,9 +58,18 @@
                 <img src="<%= qrUrl %>" alt="QR Code">
             </div>
 
-            <div style="margin-top: 30px; text-align: center;">
-                <button onclick="window.print()">Print Bill</button>
+            <div style="margin-top: 30px; text-align: center; display: flex; justify-content: center; gap: 15px;">
+                <button onclick="window.print()">Print Receipt</button>
+
+                <% if (app.getStatus() != null && !app.getStatus().equalsIgnoreCase("Paid")) { %>
+                    <form action="AppointmentServlet" method="post" style="display:inline;">
+                        <input type="hidden" name="action" value="confirmPayment">
+                        <input type="hidden" name="appNumber" value="<%= app.getAppointmentNumber() %>">
+                        <button type="submit" style="background-color: #4CAF50;">Confirm Payment & Close</button>
+                    </form>
+                <% } %>
             </div>
+
         <% } else { %>
             <p class="error">Appointment not found. Please check the ID.</p>
         <% } %>

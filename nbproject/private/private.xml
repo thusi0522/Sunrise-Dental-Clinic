@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/NetBeansProjects/assignment/src/java/com/sunrisedental/servlet/AppointmentServlet.java</file>
-            <file>file:/C:/Users/user/Documents/NetBeansProjects/assignment/src/java/com/sunrisedental/servlet/LoginServlet.java</file>
-            <file>file:/C:/Users/user/Documents/NetBeansProjects/assignment/web/META-INF/context.xml</file>
-            <file>file:/C:/Users/user/Documents/NetBeansProjects/assignment/src/java/com/sunrisedental/servlet/UserServlet.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/util/EmailUtil.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/util/DBConnection.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/util/PasswordUtil.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/web/admin_dashboard.jsp</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/servlet/AppointmentServlet.java</file>
         </group>
     </open-files>
 </project-private>

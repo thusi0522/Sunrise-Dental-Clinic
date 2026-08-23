@@ -40,8 +40,14 @@ public class UserServlet extends HttpServlet {
             }
         } else if ("delete".equals(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
-            userDAO.deleteUser(id);
-            response.sendRedirect("manage_users.jsp?msg=UserDeleted");
+            User currentUser = (User) request.getSession().getAttribute("user");
+            
+            if (currentUser != null && currentUser.getId() == id) {
+                response.sendRedirect("manage_users.jsp?error=CannotDeleteSelf");
+            } else {
+                userDAO.deleteUser(id);
+                response.sendRedirect("manage_users.jsp?msg=UserDeleted");
+            }
         }
     }
 }
