@@ -85,8 +85,8 @@ public class AppointmentServlet extends HttpServlet {
                     if (email != null && !email.isEmpty()) {
                         EmailUtil.sendConfirmationEmail(email, app.getPatientName(), appNumber, app.getAppointmentDate().toString(), timeStr);
                     }
-                } catch (Exception e) {
-                    System.err.println("Email failed: " + e.getMessage());
+                } catch (Throwable t) {
+                    System.err.println("Email service unavailable: " + t.getMessage());
                 }
                 response.sendRedirect("patient_dashboard.jsp?msg=Payment Success! Appointment Booked.");
             } else {

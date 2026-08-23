@@ -166,12 +166,38 @@ public class AppointmentDAO {
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, status.toUpperCase());
             ps.setString(2, appNumber);
-            return ps.executeUpdate() > 0;
+            
+            boolean updated = ps.executeUpdate() > 0;
+            
+            // If status is PAID, automatically archive to bills table
+            if (updated && "PAID".equalsIgnoreCase(status)) {
+                saveBillRecord(appNumber);
+            }
+            return updated;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
+
+    private void saveBillRecord(String appNumber) {
+        Appointment app = getAppointment(appNumber);
+        if (app != null) {
+            String query = "INSERT INTO bills (appointment_number, patient_name, consultation_fee, treatment_cost, total_amount) VALUES (?, ?, ?, ?, ?)";
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(query)) {
+                ps.setString(1, app.getAppointmentNumber());
+                ps.setString(2, app.getPatientName());
+                ps.setDouble(3, app.getConsultationFee());
+                ps.setDouble(4, app.getTreatmentCost());
+                ps.setDouble(5, app.getTotalBill());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
     private Appointment mapResultSetToAppointment(ResultSet rs) throws SQLException {

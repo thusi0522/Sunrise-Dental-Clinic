@@ -40,18 +40,23 @@
             <input type="hidden" name="contact" value="<%= contact %>">
             <input type="hidden" name="address" value="<%= address %>">
 
+            <div class="card-icons" style="text-align: center; margin-bottom: 20px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" height="20" alt="Visa">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" height="25" alt="Mastercard" style="margin-left: 15px;">
+            </div>
+
             <div class="form-group">
                 <label>Cardholder Name</label>
-                <input type="text" placeholder="John Doe" required>
+                <input type="text" placeholder="Full name on card" required>
             </div>
             <div class="form-group">
                 <label>Card Number</label>
-                <input type="text" placeholder="1234 5678 9101 1121" maxlength="19" required>
+                <input type="text" id="cardNum" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
             </div>
             <div style="display: flex; gap: 10px;">
-                <div class="form-group" style="flex: 1;">
+                <div class="form-group" style="flex: 2;">
                     <label>Expiry Date</label>
-                    <input type="text" placeholder="MM/YY" maxlength="5" required>
+                    <input type="text" placeholder="MM / YY" maxlength="5" required>
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label>CVV</label>
@@ -59,8 +64,32 @@
                 </div>
             </div>
 
-            <button type="submit" style="width: 100%; background: #28a745;">Pay LKR 1,000 & Confirm</button>
+            <div id="loading" style="display:none; text-align:center; margin-bottom:15px; color: #28a745; font-weight: bold;">
+                🔄 Processing Transaction...
+            </div>
+
+            <button type="submit" id="payBtn" style="width: 100%; background: #28a745; height: 50px; font-size: 1.1em; transition: 0.3s;">Confirm & Pay LKR 1,000.00</button>
         </form>
+
+        <script>
+            document.querySelector('form').onsubmit = function(e) {
+                const btn = document.getElementById('payBtn');
+                btn.disabled = true;
+                btn.style.opacity = "0.7";
+                btn.innerText = "Authorizing...";
+                document.getElementById('loading').style.display = "block";
+            };
+
+            // Auto format card number with spaces
+            document.getElementById('cardNum').addEventListener('input', function (e) {
+                let target = e.target;
+                let position = target.selectionEnd;
+                let length = target.value.length;
+                target.value = target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
+                target.selectionEnd = position + (target.value.length > length ? 1 : 0);
+            });
+        </script>
+
         <p style="text-align: center; font-size: 0.8em; color: #888; margin-top: 15px;">
             🔒 SSL Encrypted Connection
         </p>

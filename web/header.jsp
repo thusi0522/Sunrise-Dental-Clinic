@@ -1,5 +1,9 @@
 <%@ page import="com.sunrisedental.model.User" %>
 <%
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+
     User user = (User) session.getAttribute("user");
     if (user == null) {
         response.sendRedirect("login.jsp");
@@ -22,6 +26,7 @@
         <% } %>
         <% if ("CASHIER".equals(user.getRole())) { %>
             <li><a href="cashier_dashboard.jsp">Dashboard</a></li>
+            <li><a href="register_appointment.jsp">New Appointment</a></li>
             <li><a href="billing.jsp">Billing</a></li>
         <% } %>
         <% if ("PATIENT".equals(user.getRole())) { %>
