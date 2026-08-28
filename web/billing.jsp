@@ -5,6 +5,9 @@
 <head>
     <title>Patient Bill - Sunrise Dental</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .bill-container {
             background: #fff;
@@ -59,16 +62,41 @@
             </div>
 
             <div style="margin-top: 30px; text-align: center; display: flex; justify-content: center; gap: 15px;">
-                <button onclick="window.print()">Print Receipt</button>
+                <button onclick="downloadPDF()" style="background-color: #0077b6;">Download PDF Invoice</button>
+                <button onclick="window.print()" style="background-color: #707ebe;">Print Receipt</button>
 
                 <% if (app.getStatus() != null && !app.getStatus().equalsIgnoreCase("Paid")) { %>
                     <form action="AppointmentServlet" method="post" style="display:inline;">
                         <input type="hidden" name="action" value="confirmPayment">
                         <input type="hidden" name="appNumber" value="<%= app.getAppointmentNumber() %>">
-                        <button type="submit" style="background-color: #4CAF50;">Confirm Payment & Close</button>
+                        <button type="submit" style="background-color: #2dce89;">Confirm Payment & Close</button>
                     </form>
                 <% } %>
             </div>
+
+            <script>
+                async function downloadPDF() {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('p', 'pt', 'a4');
+                    const element = document.querySelector('.bill-container');
+
+                    // Hide buttons temporarily during capture
+                    const buttons = document.querySelectorAll('button, form');
+                    buttons.forEach(b => b.style.display = 'none');
+
+                    await html2canvas(element, { scale: 2 }).then(canvas => {
+                        const imgData = canvas.toDataURL('image/png');
+                        const imgProps = doc.getImageProperties(imgData);
+                        const pdfWidth = doc.internal.pageSize.getWidth();
+                        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                        doc.save('Invoice_<%= app.getAppointmentNumber() %>.pdf');
+                    });
+
+                    // Restore buttons
+                    buttons.forEach(b => b.style.display = 'inline-block');
+                }
+            </script>
 
         <% } else { %>
             <p class="error">Appointment not found. Please check the ID.</p>

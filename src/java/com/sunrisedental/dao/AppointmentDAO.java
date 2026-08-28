@@ -63,6 +63,34 @@ public class AppointmentDAO {
         return 0.0;
     }
 
+    public double getTotalRegistrationFees() {
+        String query = "SELECT SUM(consultation_fee) FROM appointments";
+        try (Connection conn = DBConnection.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+    public double getTotalTreatmentIncome() {
+        String query = "SELECT SUM(treatment_cost) FROM appointments WHERE UPPER(status) = 'PAID'";
+        try (Connection conn = DBConnection.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
     public Appointment getAppointment(String appNumber) {
         String query = "SELECT * FROM appointments WHERE appointment_number = ?";
         try (Connection conn = DBConnection.getConnection();
@@ -80,7 +108,7 @@ public class AppointmentDAO {
 
     public List<Appointment> getAllAppointments() {
         List<Appointment> list = new ArrayList<>();
-        String query = "SELECT * FROM appointments";
+        String query = "SELECT * FROM appointments ORDER BY appointment_date DESC, appointment_time DESC";
         try (Connection conn = DBConnection.getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(query)) {
@@ -92,6 +120,39 @@ public class AppointmentDAO {
         }
         return list;
     }
+
+    public List<Double> getWeeklyIncomeData() {
+        List<Double> incomeList = new ArrayList<>();
+        String query = "SELECT days.day_date, COALESCE(SUM(a.consultation_fee + a.treatment_cost), 0) AS daily_total " +
+                       "FROM ( " +
+                       "    SELECT CURRENT_DATE - INTERVAL 6 DAY AS day_date UNION ALL " +
+                       "    SELECT CURRENT_DATE - INTERVAL 5 DAY UNION ALL " +
+                       "    SELECT CURRENT_DATE - INTERVAL 4 DAY UNION ALL " +
+                       "    SELECT CURRENT_DATE - INTERVAL 3 DAY UNION ALL " +
+                       "    SELECT CURRENT_DATE - INTERVAL 2 DAY UNION ALL " +
+                       "    SELECT CURRENT_DATE - INTERVAL 1 DAY UNION ALL " +
+                       "    SELECT CURRENT_DATE " +
+                       ") days " +
+                       "LEFT JOIN appointments a ON a.appointment_date = days.day_date AND UPPER(a.status) = 'PAID' " +
+                       "GROUP BY days.day_date " +
+                       "ORDER BY days.day_date ASC";
+        
+        try (Connection conn = DBConnection.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(query)) {
+            while (rs.next()) {
+                incomeList.add(rs.getDouble("daily_total"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        // Ensure we always have 7 entries even if query fails
+        while (incomeList.size() < 7) incomeList.add(0.0);
+        
+        return incomeList;
+    }
+
 
 
     public List<Appointment> getAppointmentsByDoctor(String doctorName) {
