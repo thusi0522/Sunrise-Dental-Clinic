@@ -30,16 +30,21 @@ public class EmailUtil {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(EMAIL_FROM));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("Appointment Confirmation - Sunrise Dental Clinic");
+            message.setSubject("Payment Received & Appointment Confirmed - Sunrise Dental");
 
-            String content = "<h1>Appointment Confirmed!</h1>"
-                    + "<p>Dear " + patientName + ",</p>"
-                    + "<p>Your appointment has been successfully booked.</p>"
+            String content = "<div style='font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px; max-width: 600px;'>"
+                    + "<h2 style='color: #28a745;'>Payment Receipt: LKR 1,000.00</h2>"
+                    + "<p>Dear <b>" + patientName + "</b>,</p>"
+                    + "<p>We have successfully received your registration fee. Your appointment is now confirmed.</p>"
+                    + "<div style='background: #f9f9f9; padding: 15px; border-radius: 5px;'>"
                     + "<p><b>Appointment Number:</b> " + appNumber + "</p>"
                     + "<p><b>Date:</b> " + date + "</p>"
                     + "<p><b>Time:</b> " + time + "</p>"
-                    + "<p>Please arrive 15 minutes early. Registration fee of LKR 1,000.00 is confirmed.</p>"
-                    + "<br><p>Regards,<br>Sunrise Dental Team</p>";
+                    + "<p><b>Amount Paid:</b> LKR 1,000.00 (Registration)</p>"
+                    + "</div>"
+                    + "<p style='margin-top: 20px;'>Please show this email at the reception upon arrival.</p>"
+                    + "<hr><p style='font-size: 0.8em; color: #777;'>Sunrise Dental Clinic<br>123, Ward Place, Colombo 07</p>"
+                    + "</div>";
 
             message.setContent(content, "text/html");
 

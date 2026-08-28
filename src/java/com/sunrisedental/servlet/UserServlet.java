@@ -17,16 +17,22 @@ public class UserServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("register".equals(action)) {
+            String username = request.getParameter("username");
+            String role = request.getParameter("role");
+            if (role == null || role.isEmpty()) role = "PATIENT";
+            
+            // Gmail validation ONLY for Patients
+            if ("PATIENT".equals(role) && (username == null || !username.toLowerCase().endsWith("@gmail.com"))) {
+                response.sendRedirect("signup.jsp?error=InvalidUsernameFormat");
+                return;
+            }
+
             User user = new User();
-            user.setUsername(request.getParameter("username"));
+            user.setUsername(username);
             user.setPassword(request.getParameter("password"));
             user.setFullName(request.getParameter("fullName"));
             
-            // Only admin can set role, others default to PATIENT
-            String role = request.getParameter("role");
-            if (role == null || role.isEmpty()) {
-                role = "PATIENT";
-            }
+            // role is already defined above, just use it
             user.setRole(role);
 
             if (userDAO.registerUser(user)) {

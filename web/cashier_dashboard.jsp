@@ -50,14 +50,45 @@
     </div>
 
     <div class="dashboard-card">
-        <h3>Search Manual Bill</h3>
-        <form action="billing.jsp" method="get">
-            <div class="form-group">
-                <label>Appointment Number:</label>
-                <input type="text" name="appNumber" placeholder="Enter App Number" required>
-            </div>
-            <button type="submit">Find & Bill</button>
-        </form>
+        <h3>Paid Bills History</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>App No</th>
+                    <th>Patient Name</th>
+                    <th>Treatments</th>
+                    <th>Total Paid (LKR)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    List<Appointment> history = dao.getAllAppointments();
+                    int histCount = 0;
+                    for(Appointment app : history) {
+                        if("PAID".equalsIgnoreCase(app.getStatus())) {
+                            histCount++;
+                %>
+                <tr>
+                    <td><strong><%= app.getAppointmentNumber() %></strong></td>
+                    <td><%= app.getPatientName() %></td>
+                    <td><%= app.getTreatmentType() %></td>
+                    <td style="font-weight: 600;">LKR <%= String.format("%.2f", app.getTotalBill()) %></td>
+                    <td>
+                        <a href="billing.jsp?appNumber=<%= app.getAppointmentNumber() %>" target="_blank" class="btn btn-small" style="background: var(--primary); text-decoration: none; padding: 5px 10px; border-radius: 4px; color: white; font-size: 0.8rem;">
+                            <i class="fa-solid fa-file-pdf"></i> VIEW PDF
+                        </a>
+                    </td>
+                </tr>
+                <%
+                        }
+                    }
+                    if (histCount == 0) {
+                %>
+                <tr><td colspan="5" style="text-align:center;">No payment history found.</td></tr>
+                <% } %>
+            </tbody>
+        </table>
     </div>
 
     <%@ include file="footer.jsp" %>

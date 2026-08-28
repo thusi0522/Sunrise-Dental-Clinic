@@ -18,24 +18,32 @@
 </head>
 <body>
     <div class="login-box">
-        <h2>Sunrise Dental Login</h2>
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Access your Sunrise Dental account</p>
+        </div>
+
         <% if (request.getAttribute("error") != null) { %>
-            <p class="error"><%= request.getAttribute("error") %></p>
+            <div class="error-msg" style="background: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 0.85rem; text-align: center;">
+                <%= request.getAttribute("error") %>
+            </div>
         <% } %>
+
         <form action="login" method="post">
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" name="username" required>
+                <label>Username / Gmail</label>
+                <input type="text" name="username" required placeholder="e.g. admin or user@gmail.com">
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password" required placeholder="••••••••">
             </div>
-            <button type="submit" style="width: 100%;">Login</button>
+            <button type="submit" style="width: 100%;">Sign In</button>
         </form>
-        <p style="text-align: center; margin-top: 15px;">
-            New Patient? <a href="signup.jsp">Register here</a>
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+            New Patient? <a href="signup.jsp" style="color: var(--primary); font-weight: 500;">Register here</a>
         </p>
     </div>
+
 </body>
 </html>

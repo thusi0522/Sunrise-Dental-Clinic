@@ -88,7 +88,16 @@ public class AppointmentServlet extends HttpServlet {
                 } catch (Throwable t) {
                     System.err.println("Email service unavailable: " + t.getMessage());
                 }
-                response.sendRedirect("patient_dashboard.jsp?msg=Payment Success! Appointment Booked.");
+                
+                // Dynamic Redirect to prevent logout
+                com.sunrisedental.model.User user = (com.sunrisedental.model.User) request.getSession().getAttribute("user");
+                if (user != null && "ADMIN".equals(user.getRole())) {
+                    response.sendRedirect("admin_dashboard.jsp?msg=Booked");
+                } else if (user != null && "CASHIER".equals(user.getRole())) {
+                    response.sendRedirect("cashier_dashboard.jsp?msg=Booked");
+                } else {
+                    response.sendRedirect("patient_dashboard.jsp?msg=Success");
+                }
             } else {
                 response.sendRedirect("register_appointment.jsp?error=Database Error during saving.");
             }
