@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/util/EmailUtil.java</file>
             <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/util/DBConnection.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/util/PasswordUtil.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/servlet/UserServlet.java</file>
             <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/web/admin_dashboard.jsp</file>
-            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/src/java/com/sunrisedental/servlet/AppointmentServlet.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/Sunrise-Dental-Clinic/web/header.jsp</file>
         </group>
     </open-files>
 </project-private>
