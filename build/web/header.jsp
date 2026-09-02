@@ -138,7 +138,7 @@
 <header class="main-navbar">
     <a href="#" class="brand-logo">
         <i class="fa-solid fa-tooth"></i>
-        <h1>Sunrise Dental Clinic</h1>
+        <h1 style="color: white;"> Sunrise Dental Clinic </h1>
     </a>
 
     <div class="nav-container">
