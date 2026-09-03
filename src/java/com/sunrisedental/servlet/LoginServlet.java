@@ -36,8 +36,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("cashier_dashboard.jsp");
             }
         } else {
-            request.setAttribute("error", "Invalid username or password");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            response.sendRedirect("login.jsp?error=InvalidCredentials");
         }
     }
 }
