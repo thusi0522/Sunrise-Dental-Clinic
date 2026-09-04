@@ -33,7 +33,9 @@ public class AppointmentDAO {
     }
 
     public boolean isSlotAvailable(String dentist, Date date, Time time) {
-        String query = "SELECT COUNT(*) FROM appointments WHERE dentist_name = ? AND appointment_date = ? AND appointment_time = ?";
+        // Exclude 'CANCELLED' status so that those slots can be reused.
+        // Also use TRIM() to ensure whitespace doesn't cause mismatches.
+        String query = "SELECT COUNT(*) FROM appointments WHERE TRIM(dentist_name) = TRIM(?) AND appointment_date = ? AND appointment_time = ? AND UPPER(status) != 'CANCELLED'";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, dentist);
@@ -41,7 +43,9 @@ public class AppointmentDAO {
             ps.setTime(3, time);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1) == 0;
+                int count = rs.getInt(1);
+                System.out.println("DEBUG: Checking availability for " + dentist + " at " + date + " " + time + ". Found: " + count);
+                return count == 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();

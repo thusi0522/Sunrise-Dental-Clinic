@@ -48,14 +48,48 @@
             </div>
 
             <div class="form-group">
-                <label>Treatment Type</label>
-                <select name="treatment">
-                    <option value="Cleaning">Cleaning</option>
-                    <option value="Filling">Filling</option>
-                    <option value="Extraction">Extraction</option>
-                    <option value="Root Canal">Root Canal</option>
-                </select>
+                <label>Treatment Type (Select one or more)</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" name="treatment" value="Cleaning" class="treatment-cb" style="width: 18px; height: 18px;"> Cleaning
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" name="treatment" value="Filling" class="treatment-cb" style="width: 18px; height: 18px;"> Filling
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" name="treatment" value="Extraction" class="treatment-cb" style="width: 18px; height: 18px;"> Extraction
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" name="treatment" value="Root Canal" class="treatment-cb" style="width: 18px; height: 18px;"> Root Canal
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" name="treatment" value="Checkup" class="treatment-cb" style="width: 18px; height: 18px;"> General Checkup
+                    </label>
+                </div>
             </div>
+
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2196f3;">
+                <p style="margin: 0; font-size: 1rem; color: #0d47a1; font-weight: 600;">
+                    Total Registration Fee: LKR <span id="displayFee">0.00</span>
+                </p>
+                <input type="hidden" name="totalFee" id="totalFeeInput" value="0">
+            </div>
+
+            <script>
+                const checkboxes = document.querySelectorAll('.treatment-cb');
+                const displayFee = document.getElementById('displayFee');
+                const feeInput = document.getElementById('totalFeeInput');
+
+                checkboxes.forEach(cb => {
+                    cb.addEventListener('change', () => {
+                        const count = document.querySelectorAll('.treatment-cb:checked').length;
+                        const total = count * 1000;
+                        displayFee.innerText = total.toLocaleString() + ".00";
+                        feeInput.value = total;
+                    });
+                });
+            </script>
+
             <div class="form-group">
                 <label>Date</label>
                 <input type="date" name="date" required>

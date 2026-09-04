@@ -19,18 +19,26 @@
         String dentist = request.getParameter("dentist");
         String date = request.getParameter("date");
         String time = request.getParameter("time");
-        String treatment = request.getParameter("treatment");
+
+        // Handle multiple treatment values
+        String[] treatmentsArray = request.getParameterValues("treatment");
+        String treatment = "";
+        if (treatmentsArray != null) {
+            treatment = String.join(", ", treatmentsArray);
+        }
+
         String contact = request.getParameter("contact");
         String address = request.getParameter("address");
     %>
 
     <div class="payment-box">
         <h2 style="text-align: center; color: #28a745;">Secure Payment</h2>
-        <p style="text-align: center;">Registration Fee: <strong>LKR 1,000.00</strong></p>
+        <p style="text-align: center; font-size: 1.1rem;">Total Amount: <strong>LKR <%= request.getParameter("totalFee") != null ? request.getParameter("totalFee") : "1,000" %>.00</strong></p>
         <hr>
 
         <form action="AppointmentServlet" method="post">
             <input type="hidden" name="action" value="confirmRegistration">
+            <input type="hidden" name="totalFee" value="<%= request.getParameter("totalFee") %>">
             <input type="hidden" name="patientName" value="<%= patientName %>">
             <input type="hidden" name="email" value="<%= email %>">
             <input type="hidden" name="dentist" value="<%= dentist %>">

@@ -6,6 +6,7 @@ import com.sunrisedental.util.EmailUtil;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalTime;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -48,6 +49,14 @@ public class AppointmentServlet extends HttpServlet {
         }
 
         Date date = Date.valueOf(dateStr);
+        LocalTime localTime = LocalTime.parse(timeStr);
+        
+        // Clinic Hours Enforcements: 08:30 to 20:00
+        if (localTime.isBefore(LocalTime.of(8, 30)) || localTime.isAfter(LocalTime.of(20, 0))) {
+            response.sendRedirect("register_appointment.jsp?error=Clinic is closed! Hours: 08:30 AM - 08:00 PM");
+            return;
+        }
+
         if (timeStr.length() == 5) timeStr += ":00";
         Time time = Time.valueOf(timeStr);
 
@@ -71,12 +80,22 @@ public class AppointmentServlet extends HttpServlet {
         app.setAppointmentDate(Date.valueOf(request.getParameter("date")));
         
         String timeStr = request.getParameter("time");
+        LocalTime localTime = LocalTime.parse(timeStr);
+        if (localTime.isBefore(LocalTime.of(8, 30)) || localTime.isAfter(LocalTime.of(20, 0))) {
+            response.sendRedirect("register_appointment.jsp?error=Invalid booking time!");
+            return;
+        }
+
         if (timeStr.length() == 5) timeStr += ":00";
         app.setAppointmentTime(Time.valueOf(timeStr));
         
-        app.setConsultationFee(1000.00);
+        // Dynamic Registration Fee Calculation
+        String feeStr = request.getParameter("totalFee");
+        double regFee = (feeStr != null && !feeStr.isEmpty()) ? Double.parseDouble(feeStr) : 1000.00;
+        
+        app.setConsultationFee(regFee);
         app.setTreatmentCost(0.00);
-        app.setStatus("Pending");
+        app.setStatus("PENDING");
 
         if (dao.isSlotAvailable(app.getDentistName(), app.getAppointmentDate(), app.getAppointmentTime())) {
             if (dao.registerAppointment(app)) {

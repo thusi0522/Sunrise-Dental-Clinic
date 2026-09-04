@@ -18,6 +18,10 @@ public class UserServlet extends HttpServlet {
 
         if ("register".equals(action)) {
             String username = request.getParameter("username");
+            if (username != null) username = username.trim();
+            
+            String password = request.getParameter("password");
+            
             String role = request.getParameter("role");
             if (role == null || role.isEmpty()) role = "PATIENT";
             
@@ -26,10 +30,16 @@ public class UserServlet extends HttpServlet {
                 response.sendRedirect("signup.jsp?error=InvalidUsernameFormat");
                 return;
             }
+            
+            // Password length validation
+            if (password == null || password.length() < 6) {
+                response.sendRedirect("signup.jsp?error=PasswordTooShort");
+                return;
+            }
 
             User user = new User();
             user.setUsername(username);
-            user.setPassword(request.getParameter("password"));
+            user.setPassword(password);
             user.setFullName(request.getParameter("fullName"));
             
             // role is already defined above, just use it
